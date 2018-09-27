@@ -1,0 +1,49 @@
+server:
+  port: 8060
+
+eureka:
+  client:
+    serviceUrl:
+       defaultZone: http://127.0.0.1:8061/eureka/,http://127.0.0.1:8062/eureka/
+
+logging:
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+              
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+      routes:
+      - id: employee-service
+        uri: lb://employee-service
+        predicates:
+        - Path=/employee/**
+        filters:
+        - RewritePath=/employee/(?<path>.*), /$\{path}
+      - id: department-service
+        uri: lb://department-service
+        predicates:
+        - Path=/department/**
+        filters:
+        - RewritePath=/department/(?<path>.*), /$\{path}
+      - id: organization-service
+        uri: lb://organization-service
+        predicates:
+        - Path=/organization/**
+        filters:
+        - RewritePath=/organization/(?<path>.*), /$\{path}
+      - id: member-service
+        uri: lb://member-service
+        predicates:
+        - Path=/member/**
+        filters:
+        - RewritePath=/member/(?<path>.*), /$\{path}
+info:
+ app:
+  name: GATEWAY(微服务网关服务)
+  version: 1.0
+  athor: ligang
+  blog-url: www.chinabim.com
